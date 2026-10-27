@@ -1,0 +1,27 @@
+{
+  "name": "gym-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@prisma/cli-engine": "^0.7.0",
+    "@prisma/client": "^6.19.3",
+    "@types/node": "^26.6.5",
+    "prisma": "^6.19.3",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.5"
+  },
+  "dependencies": {
+    "@prisma/orm-postgres": "^8.0.0-rc.18",
+    "dotenv": "^18.0.8"
+  }
+}

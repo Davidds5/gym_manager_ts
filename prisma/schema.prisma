@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// regra (nomeDoCampo tipo @decorador)
+model Plano {
+  id              Int         @id @default(autoincrement())
+  nome            String
+  precoEmCentavos Int
+  duracaoMeses    Int
+  ativo           Boolean     @default(true)
+  criadoEm        DateTime    @default(now())
+  matriculas      Matricula[]
+}
+
+enum Role {
+  ADMIN
+  RECEPCAO
+  ALUNO
+}
+
+model Usuario {
+  id         Int         @id @default(autoincrement())
+  nome       String
+  email      String      @unique
+  cpf        String      @unique
+  role       Role        @default(ALUNO)
+  criadoEm   DateTime    @default(now())
+  matriculas Matricula[]
+  checkins   Checkin[]
+}
+
+enum StatusMatricula {
+  PENDENTE_PAGAMENTO
+  ATIVA
+  INADIMPLENTE
+  BLOQUEADA
+  CANCELADA
+}
+
+model Matricula {
+  id          Int             @id @default(autoincrement())
+  alunoId     Int
+  aluno       Usuario         @relation(fields: [alunoId], references: [id])
+  planoId     Int
+  plano       Plano           @relation(fields: [planoId], references: [id])
+  status      StatusMatricula @default(PENDENTE_PAGAMENTO)
+  dataInicio  DateTime        @default(now())
+  dataFim     DateTime        @default(now())
+  canceladoEm DateTime?
+  criadoEm    DateTime        @default(now())
+  faturas     Fatura[]
+}
+
+enum StatusFatura {
+  PENDENTE
+  PAGA
+  ATRASADA
+  CANCELADA
+}
+
+model Fatura {
+  id              Int          @id @default(autoincrement())
+  matriculaId     Int
+  matricula       Matricula    @relation(fields: [matriculaId], references: [id])
+  valorEmCentavos Int
+  status          StatusFatura @default(PENDENTE)
+  dataVencimento  DateTime
+  dataPagamento   DateTime?
+  criadoEm        DateTime     @default(now())
+}
+
+model Checkin {
+  id       Int      @id @default(autoincrement())
+  alunoId  Int
+  aluno    Usuario  @relation(fields: [alunoId], references: [id])
+  dataHora DateTime @default(now())
+}
