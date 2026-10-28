@@ -1,4 +1,4 @@
-name: CI Gym Manger
+name: CI Gym Manager
 
 on: 
   push: 
@@ -7,8 +7,7 @@ on:
     branches: [ main ]
 
 env: 
-  NODE_VERDSION: '20'
-
+  NODE_VERSION: '20'
 
 jobs: 
   testes: 
@@ -16,34 +15,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps: 
-      - name: Baixa codigo
+      - name: Baixar codigo
         uses: actions/checkout@v4
 
       - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERDSION}}
+          node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
-      - name:  Instalar dependencias
+      - name: Instalar dependencias
         run: npm ci 
 
-      - name: Gera Prisma
+      - name: Gerar Prisma
         run: npx prisma generate
 
       - name: Rodar Vitest
         run: npm run test
 
+  sucesso: 
+    name: 'Validacao Concluida'
+    needs: testes
+    runs-on: ubuntu-latest
 
-    sucesso: 
-      name: 'Validacao Concluida'
-      needs: testes
-      runs-on: ubuntu-latest
+    steps: 
+      - name: Exibir Dados do Contexto
+        run: |
+          echo "✅ Pipeline executada com sucesso!"
+          echo "📦 Repositorio: ${{ github.repository }}"
+          echo "👤 Autor do commit: ${{ github.actor }}"
+          echo "🌿 Branch: ${{ github.ref_name }}"
 
-      steps: 
-        - name: Exibir Dados do Contexto
-          run: |
-            echo "✅ Pipeline executada com sucesso!"
-            echo "📦 Repositorio: ${{ github.repository }}"
-            echo "👤 Autor do commit: ${{ github.actor }}"
-            echo "🌿 Branch: ${{ github.ref_name }}"
+      - name: Testando segredo
+        env: 
+          TOKEN: ${{ secrets.CHAVE_SECRETA }}
+        run: echo "O segredo foi injetado com sucesso! Valor mascarado: $TOKEN"
