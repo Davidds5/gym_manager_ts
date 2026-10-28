@@ -8,6 +8,8 @@ on:
 
 env: 
   NODE_VERSION: '20'
+  DATABASE_URL: 'postgresql://fake:fake@localhost:5432/gym_test'
+  
 
 jobs: 
   testes: 
