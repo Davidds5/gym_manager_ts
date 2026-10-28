@@ -49,4 +49,6 @@ jobs:
       - name: Testando segredo
         env: 
           TOKEN: ${{ secrets.CHAVE_SECRETA }}
-        run: echo "O segredo foi injetado com sucesso! Valor mascarado: $TOKEN"
+        run: |
+          echo "O segredo foi injetado com sucesso!"
+          echo "Valor mascarado: $TOKEN"
