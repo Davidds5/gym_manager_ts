@@ -1,30 +1,49 @@
-name: CI Gym Manager
+name: CI Gym Manger
 
-on:
-  push:
+on: 
+  push: 
     branches: [ main ]
-  pull_request:
+  pull_request: 
     branches: [ main ]
 
-jobs:
-  testes:
+env: 
+  NODE_VERDSION: '20'
+
+
+jobs: 
+  testes: 
+    name: 'Executar Testes Unitarios'
     runs-on: ubuntu-latest
 
-    steps:
-      - name: Baixar codigo
-        uses: actions/checkout@v4
+    steps: 
+      - name: Baixa codigo
+        uses: actions/checkeout@v4
 
       - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERDSION}}
           cache: 'npm'
 
-      - name: Instalar dependencias
-        run: npm ci
+      - name:  Instalar dependencias
+        run: npm ci 
 
-      - name: Gerar Prisma
-        run: npx prisma generate
+      - name: Gera Prisma
+        run: npm prisma generate
 
-      - name: Rodar Testes Unitarios
-        run: npm run test
+      - name: Rodar Vitest
+        run: npm run testes
+
+
+    sucesso: 
+      name: 'Validacao Concluida'
+      needs: testes
+      runs-on: ubuntu-latest
+
+      steps: 
+        - name: Exibir Dados do Contexto
+          run: |
+            echo "✅ Pipeline executada com sucesso!"
+            echo "📦 Repositorio: ${{ github.repository }}"
+            echo "👤 Autor do commit: ${{ github.actor }}"
+            echo "🌿 Branch: ${{ github.ref_name }}"
