@@ -17,7 +17,7 @@ jobs:
 
     steps: 
       - name: Baixa codigo
-        uses: actions/checkeout@v4
+        uses: actions/checkout@v4
 
       - name: Instalar Node.js
         uses: actions/setup-node@v4
@@ -29,10 +29,10 @@ jobs:
         run: npm ci 
 
       - name: Gera Prisma
-        run: npm prisma generate
+        run: npx prisma generate
 
       - name: Rodar Vitest
-        run: npm run testes
+        run: npm run test
 
 
     sucesso: 
