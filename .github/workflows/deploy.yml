@@ -54,3 +54,14 @@ jobs:
         run: |
           echo "O segredo foi injetado com sucesso!"
           echo "Valor mascarado: $TOKEN"
+    
+
+    deploy:
+      name: 'Deploy em producao'
+      needs: testes
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Disparar Deploy no Render
+          run: |
+            curl -X POST '${{ secrets.RENDER_DEPLOY_HOOK_URL}}'
